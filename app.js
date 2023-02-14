@@ -5,6 +5,8 @@ const app = express();
 
 // ConnecDb
 
+const connectDB = require("./db/connect")
+
 //routers
 const jobsRouter = require('./routes/jobs');
 const authRouter = require('./routes/auth');
@@ -28,6 +30,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
+    await connectDB(process.env.URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
