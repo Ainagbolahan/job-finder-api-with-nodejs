@@ -37,7 +37,7 @@ const updateJob = async (req, res) => {
 		throw new BadRequestError('Company and position are required')
 	}
 
-	const jobs = await Job.findOneAndUpdate({ _id: userId, createdBy: userId }, req.body, {
+	const jobs = await Job.findOneAndUpdate({ _id: jobId, createdBy: userId }, req.body, {
 		new: true,
 		runValidators: true,
 	})
@@ -47,7 +47,19 @@ const updateJob = async (req, res) => {
 	return res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
 }
 
-const deleteJob = async (req, res) => {}
+const deleteJob = async (req, res) => {
+    const {
+        user: { userId },
+        params: { id: jobId },
+        } = req
+
+    const jobs = await Job.findOneAndDelete({ _id: jobId, createdBy: userId });
+    if (!jobs) {
+        throw new NotFoundError('No job found')
+    }
+    return res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
+
+}
 
 module.exports = {
 	getAllJobs,
